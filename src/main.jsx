@@ -4,6 +4,7 @@ import './index.css'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import Layout from './Layout.jsx'
 import LandingPage from './pages/LandingPage.jsx'
+import NavbarComForUser from './pages/Navbar.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -13,7 +14,7 @@ const router = createBrowserRouter(
       
       {/* Routes with Sidebar Layout */}
       <Route path='/dashboard' element={<Layout />}>
-        {/* <Route path='about' element={<App />} /> */}
+      <Route path='navbar' element={<NavbarComForUser/>} />
       </Route>
     </>
   )
