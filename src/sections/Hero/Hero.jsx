@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import PreviewComponent from "../PreviewCom/PreviewComponent";
+import PreviewComponent from "../../components/PreviewCom/PreviewComponent";
 
 
 const Hero = () => {
