@@ -13,49 +13,84 @@ export default function PreviewComponent({ title, code, language = "jsx", childr
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto p-4 border rounded-lg shadow-md bg-white mt-6">
-      <h2 className="text-lg font-semibold text-gray-800 mb-3">{title}</h2>
+    <div className="w-full max-w-4xl mx-auto p-6 rounded-xl shadow-xl bg-gradient-to-br from-[#FFEAC5] to-[#FFDBB5]/70 border border-[#6C4E31]/20 mt-8 group">
+      {/* Header with accent bar */}
+      <div className="flex items-start justify-between mb-4">
+        <h2 className="text-xl font-bold text-[#603F26] px-3 py-1 bg-[#FFDBB5]/50 rounded-lg inline-block">
+          {title}
+        </h2>
+        <div className="h-1 w-16 bg-[#F7374F] rounded-full mt-2 group-hover:w-24 transition-all duration-500"></div>
+      </div>
 
-      {/* Tabs */}
-      <div className="flex border-b">
-        {[{ label: "Preview", value: "preview", icon: <Eye size={18} /> },
-          { label: "Code", value: "code", icon: <Code size={18} /> },
+      {/* Premium Tabs */}
+      <div className="flex border-b border-[#6C4E31]/20">
+        {[
+          { label: "Preview", value: "preview", icon: <Eye size={18} className="text-[#6C4E31]" /> },
+          { label: "Code", value: "code", icon: <Code size={18} className="text-[#6C4E31]" /> },
         ].map(({ label, value, icon }) => (
           <button
             key={value}
-            className={`flex-1 py-2 flex items-center justify-center gap-2 text-sm font-medium transition-all ${
-              activeTab === value ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"
+            className={`flex-1 py-3 flex items-center justify-center gap-2 font-medium transition-all relative overflow-hidden ${
+              activeTab === value 
+                ? "text-[#603F26] font-semibold" 
+                : "text-[#6C4E31] hover:text-[#603F26]"
             }`}
             onClick={() => setActiveTab(value)}
           >
             {icon} {label}
+            {activeTab === value && (
+              <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/2 h-0.5 bg-[#603F26] rounded-full"></span>
+            )}
           </button>
         ))}
       </div>
 
-      {/* Preview / Code */}
-      <div className="p-4 mt-3 relative">
+      {/* Content Area */}
+      <div className="mt-4 relative">
         {activeTab === "preview" ? (
-          <div className="flex flex-wrap justify-center gap-4 w-full">{children}</div>
+          <div className="p-6 bg-white/70 backdrop-blur-sm rounded-lg border border-[#6C4E31]/10 shadow-inner">
+            <div className="flex flex-wrap justify-center gap-6 w-full">{children}</div>
+          </div>
         ) : (
           <div className="relative">
-            {/* Copy Button */}
+            {/* Enhanced Copy Button */}
             <button
               onClick={handleCopy}
-              className="absolute top-3 right-3 bg-gray-200 text-gray-800 px-2 py-1 rounded-md text-sm flex items-center gap-1 hover:bg-gray-300"
+              className={`absolute top-4 right-4 z-10 px-3 py-1.5 rounded-lg flex items-center gap-1 text-sm font-medium transition-all ${
+                copied
+                  ? "bg-[#6C4E31] text-[#FFEAC5]"
+                  : "bg-[#603F26] text-[#FFDBB5] hover:bg-[#6C4E31] hover:text-[#FFEAC5]"
+              } shadow-md hover:shadow-lg`}
             >
-              {copied ? <Check size={16} /> : <Copy size={16} />}
-              {copied ? "Copied!" : "Copy"}
+              {copied ? (
+                <>
+                  <Check size={16} className="shrink-0" />
+                  <span>Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy size={16} className="shrink-0" />
+                  <span>Copy</span>
+                </>
+              )}
             </button>
 
-            {/* Code Block - White Theme */}
+            {/* Premium Code Block */}
             <Highlight code={code.trim()} language={language}>
               {({ tokens, getLineProps, getTokenProps }) => (
-                <pre className="p-4 rounded-md overflow-auto text-sm leading-relaxed bg-white text-gray-800 border border-gray-200">
+                <pre className="p-6 rounded-lg overflow-auto text-sm leading-relaxed bg-[#603F26]/90 backdrop-blur-sm text-[#FFDBB5] border border-[#6C4E31]/30 shadow-inner">
                   {tokens.map((line, i) => (
-                    <div key={i} {...getLineProps({ line })} className="whitespace-pre-wrap">
+                    <div 
+                      key={i} 
+                      {...getLineProps({ line })} 
+                      className="whitespace-pre-wrap hover:bg-[#6C4E31]/30 transition-colors px-2 py-1 rounded"
+                    >
                       {line.map((token, key) => (
-                        <span key={key} {...getTokenProps({ token })} className="text-blue-600" />
+                        <span 
+                          key={key} 
+                          {...getTokenProps({ token })} 
+                          className="token"
+                        />
                       ))}
                     </div>
                   ))}
@@ -65,6 +100,8 @@ export default function PreviewComponent({ title, code, language = "jsx", childr
           </div>
         )}
       </div>
+
+      
     </div>
   );
 }
